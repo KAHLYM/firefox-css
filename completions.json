@@ -1,0 +1,8 @@
+{
+    "completions": [
+        {
+            "label": ".search-panel-header > label",
+            "snippet": ".search-panel-header > label {\n\tmargin-top: 2px;\n\tmargin-bottom: 1px;\n\topacity: .6;\n}"
+        }
+    ]
+}
