@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import json from '../completions.json';
 
 // This method is called when your extension is activated
 // Your extension is activated the very first time the command is executed
@@ -21,8 +22,17 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const completion = vscode.languages.registerCompletionItemProvider({ pattern: '**/userChrome.css' }, {
 		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
-			return [
-			];
+
+			let completions: vscode.CompletionItem[] = [];
+
+			for (let element of json.completions) {
+				const completion = new vscode.CompletionItem({ label: element.label!, description: "Firefox CSS" }, vscode.CompletionItemKind.Snippet);
+				completion.documentation = new vscode.MarkdownString(`\`\`\`css\n${element.snippet!}`);
+				completion.insertText = new vscode.SnippetString(element.snippet!);
+				completions.push(completion);
+			};
+
+			return completions;
 		}
 	});
 
