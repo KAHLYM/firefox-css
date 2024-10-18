@@ -35,7 +35,7 @@ for file in glob.glob(f"{GECKO_DEV}/browser/themes/shared/**/*.css"):
             content = "".join([str(element.value) for element in rule.content])
 
             completions.append(
-                {"label": prelude, "snippet": f"{prelude} {{{content}}}"}
+                {"label": prelude, "snippet": f"{prelude}{{{content}}}"}
             )
 
 with open("./completions.json", "w") as f:
