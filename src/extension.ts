@@ -19,8 +19,15 @@ export function activate(context: vscode.ExtensionContext) {
 		vscode.window.showInformationMessage('Hello World from firefox-css!');
 	});
 
-	context.subscriptions.push(disposable);
+	const completion = vscode.languages.registerCompletionItemProvider({ pattern: '**/userChrome.css' }, {
+		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
+			return [
+			];
+		}
+	});
+
+	context.subscriptions.push(disposable, completion);
 }
 
 // This method is called when your extension is deactivated
-export function deactivate() {}
+export function deactivate() { }
