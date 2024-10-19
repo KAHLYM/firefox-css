@@ -4,7 +4,7 @@
 		"target": "ES2022",
 		"outDir": "out",
 		"lib": [
-			"ES2022", "es2015.iterable"
+			"ES2022"
 		],
 		"sourceMap": true,
 		"rootDir": "src",
