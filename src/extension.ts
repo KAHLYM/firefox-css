@@ -42,15 +42,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 			let completions: vscode.CompletionItem[] = [];
 
-			const targetPlatform = vscode.workspace.getConfiguration('firefoxCSS').get<string>('targetPlatform');
-
 			for (const [platform, values] of Object.entries(json.completions)) {
 
 				if (!isPlatformAllowedByConfiguration(platform)) {
 					continue;
 				}
 
-				for (let element of values) {
+				for (const element of values) {
 					const completion = new vscode.CompletionItem({ label: element.label!, description: `Firefox CSS` }, vscode.CompletionItemKind.Snippet);
 					completion.documentation = new vscode.MarkdownString(`${getDesriptionPrefix(platform)}\`\`\`css\n${element.snippet!}`);
 					completion.insertText = new vscode.SnippetString(element.snippet!);
