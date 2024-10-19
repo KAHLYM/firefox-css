@@ -8,11 +8,13 @@ export function activate(context: vscode.ExtensionContext) {
 
 			let completions: vscode.CompletionItem[] = [];
 
-			for (let element of json.completions) {
-				const completion = new vscode.CompletionItem({ label: element.label!, description: "Firefox CSS" }, vscode.CompletionItemKind.Snippet);
-				completion.documentation = new vscode.MarkdownString(`\`\`\`css\n${element.snippet!}`);
-				completion.insertText = new vscode.SnippetString(element.snippet!);
-				completions.push(completion);
+			for (const [_, values] of Object.entries(json.completions)) {
+				for (let element of values) {
+					const completion = new vscode.CompletionItem({ label: element.label!, description: "Firefox CSS" }, vscode.CompletionItemKind.Snippet);
+					completion.documentation = new vscode.MarkdownString(`\`\`\`css\n${element.snippet!}`);
+					completion.insertText = new vscode.SnippetString(element.snippet!);
+					completions.push(completion);
+				};
 			};
 
 			return completions;
