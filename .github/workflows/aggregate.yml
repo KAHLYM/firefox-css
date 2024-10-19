@@ -19,4 +19,4 @@ jobs:
           path: ./gecko-dev
           sparse-checkout: "browser/themes"
     - name: Run script
-      run: python scripts/aggregate.py --path "./gecko-dev"
+      run: python ./firefox-css/scripts/aggregate.py --path "./gecko-dev"
