@@ -23,7 +23,8 @@ jobs:
       with:
         python-version:  '3.12'
     - name: Install aggregate.requirements.txt
-      run: pip install -r aggregate.requirements.txt
+      working-directory: firefox-css
+      run: pip install -r scripts/aggregate.requirements.txt
     - name: Run script
       working-directory: firefox-css
       run: python scripts/aggregate.py --path "gecko-dev"
