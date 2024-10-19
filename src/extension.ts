@@ -35,6 +35,7 @@ export function getDesriptionPrefix(platform: string): string {
 	}
 }
 
+/* istanbul ignore next: Difficult to unit test */
 export function activate(context: vscode.ExtensionContext) {
 
 	const completion = vscode.languages.registerCompletionItemProvider({ pattern: '**/userChrome.css' }, {
