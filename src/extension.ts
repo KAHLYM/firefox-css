@@ -35,11 +35,6 @@ export function getDesriptionPrefix(platform: string): string {
 	}
 }
 
-interface Element {
-	label: string;
-	snippet: string;
-};
-
 export function activate(context: vscode.ExtensionContext) {
 
 	const completion = vscode.languages.registerCompletionItemProvider({ pattern: '**/userChrome.css' }, {
@@ -53,7 +48,7 @@ export function activate(context: vscode.ExtensionContext) {
 					continue;
 				}
 
-				for (const element of values as Element[]) {
+				for (const element of values!) {
 					const completion = new vscode.CompletionItem({ label: element.label!, description: `Firefox CSS` }, vscode.CompletionItemKind.Snippet);
 					completion.documentation = new vscode.MarkdownString(`${getDesriptionPrefix(platform)}\`\`\`css\n${element.snippet!}`);
 					completion.insertText = new vscode.SnippetString(element.snippet!);
