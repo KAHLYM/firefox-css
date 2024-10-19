@@ -65,5 +65,3 @@ for source in sources:
 
 with open("./completions.json", "w") as f:
     json.dump({"completions": completions}, f)
-
-print("Aggregation complete")
