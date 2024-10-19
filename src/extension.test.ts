@@ -13,15 +13,10 @@ suite('Extension Test Suite', () => {
         assert.strictEqual(-1, [1, 2, 3].indexOf(0));
     });
 
-    test('getDesriptionPrefix returns expected string for Linux', () => {
-        assert.strictEqual(-1, [1, 2, 3].indexOf(5));
-        assert.strictEqual(-1, [1, 2, 3].indexOf(0));
-    });
-
     [
         { platform: "linux", descriptionPrefix: "Linux-specific Firefox CSS" },
-        { platform: "osx", descriptionPrefix: "Linux-specific Firefox CSS" },
-        { platform: "windows", descriptionPrefix: "Linux-specific Firefox CSS" },
+        { platform: "osx", descriptionPrefix: "macOS-specific Firefox CSS" },
+        { platform: "windows", descriptionPrefix: "Windows-specific Firefox CSS" },
         { platform: "non-platform", descriptionPrefix: "" },
     ].forEach(function (item) {
         test("getDesriptionPrefix return for '" + item.platform + "'", () => {
