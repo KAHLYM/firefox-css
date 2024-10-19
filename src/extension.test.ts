@@ -25,6 +25,7 @@ suite('Extension Test Suite', () => {
         { platform: "windows", targetPlatform: "non-platform", allowed: false },
         { platform: "shared", targetPlatform: "All", allowed: true },
         { platform: "shared", targetPlatform: "non-platform", allowed: true },
+        { platform: "", targetPlatform: "", allowed: true }, // Default
     ].forEach(function (item) {
         test("isPlatformAllowedByConfiguration return for platform'" + item.platform + " with target platform '" + item.targetPlatform + "'", () => {
             assert.equal(item.allowed, myExtension.isPlatformAllowedByConfiguration(item.platform, item.targetPlatform));
