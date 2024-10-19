@@ -14,6 +14,24 @@ suite('Extension Test Suite', () => {
     });
 
     [
+        { platform: "linux", targetPlatform: "Linux", allowed: true },
+        { platform: "linux", targetPlatform: "All", allowed: true },
+        { platform: "linux", targetPlatform: "non-platform", allowed: false },
+        { platform: "osx", targetPlatform: "macOS", allowed: true },
+        { platform: "osx", targetPlatform: "All", allowed: true },
+        { platform: "osx", targetPlatform: "non-platform", allowed: false },
+        { platform: "windows", targetPlatform: "Windows", allowed: true },
+        { platform: "windows", targetPlatform: "All", allowed: true },
+        { platform: "windows", targetPlatform: "non-platform", allowed: false },
+        { platform: "shared", targetPlatform: "All", allowed: true },
+        { platform: "shared", targetPlatform: "non-platform", allowed: true },
+    ].forEach(function (item) {
+        test("isPlatformAllowedByConfiguration return for platform'" + item.platform + " with target platform '" + item.targetPlatform + "'", () => {
+            assert.equal(item.allowed, myExtension.isPlatformAllowedByConfiguration(item.platform, item.targetPlatform));
+        });
+    });
+
+    [
         { platform: "linux", descriptionPrefix: "Linux-specific Firefox CSS" },
         { platform: "osx", descriptionPrefix: "macOS-specific Firefox CSS" },
         { platform: "windows", descriptionPrefix: "Windows-specific Firefox CSS" },

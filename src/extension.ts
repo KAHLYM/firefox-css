@@ -1,8 +1,8 @@
 import * as vscode from 'vscode';
 import json from '../completions.json';
 
-export function isPlatformAllowedByConfiguration(platform: string): boolean {
-	const targetPlatform = vscode.workspace.getConfiguration('firefoxCSS').get<string>('targetPlatform');
+export function isPlatformAllowedByConfiguration(platform: string, targetPlatform_: string = ""): boolean {
+	const targetPlatform = targetPlatform_ ? targetPlatform_ : vscode.workspace.getConfiguration('firefoxCSS').get<string>('targetPlatform');
 	switch (platform) {
 		case "linux":
 			if (!["All", "Linux"].includes(targetPlatform!)) {
