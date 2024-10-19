@@ -8,6 +8,10 @@ jobs:
   Aggregate:
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout firefox-css
+      uses: actions/checkout@v4
+      with:
+          path: ./firefox-css
     - name: Checkout gecko-dev
       uses: actions/checkout@v4
       with:
@@ -15,4 +19,4 @@ jobs:
           path: ./gecko-dev
           sparse-checkout: "browser/themes"
     - name: Run script
-      run: python scripts/aggregate.py --path "./gecko-dev"
+      run: python ./scripts/aggregate.py --path "./gecko-dev"
