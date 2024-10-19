@@ -19,5 +19,8 @@ jobs:
           path: gecko-dev
           sparse-checkout: "browser/themes"
     - name: Run script
+      uses: actions/setup-python@v5
+      with:
+        python-version:  '3.12'
       working-directory: firefox-css
       run: python scripts/aggregate.py --path "gecko-dev"
