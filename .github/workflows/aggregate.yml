@@ -11,12 +11,13 @@ jobs:
     - name: Checkout firefox-css
       uses: actions/checkout@v4
       with:
-          path: ./firefox-css
+          path: firefox-css
     - name: Checkout gecko-dev
       uses: actions/checkout@v4
       with:
           repository: mozilla/gecko-dev
-          path: ./gecko-dev
+          path: gecko-dev
           sparse-checkout: "browser/themes"
     - name: Run script
-      run: python ./firefox-css/scripts/aggregate.py --path "./gecko-dev"
+      working_directory: firefox-css
+      run: python scripts/aggregate.py --path "gecko-dev"
