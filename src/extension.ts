@@ -65,4 +65,5 @@ export function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(completion);
 }
 
+/* istanbul ignore next: Empty function */
 export function deactivate() { }
