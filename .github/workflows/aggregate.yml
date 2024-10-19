@@ -12,5 +12,7 @@ jobs:
       uses: actions/checkout@v4
       with:
           repository: mozilla/gecko-dev
-          path: gecko-dev
+          path: ./gecko-dev
           sparse-checkout: "browser/themes"
+    - name: Run script
+      run: python scripts/aggregate.py --path "./gecko-dev"
