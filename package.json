@@ -19,7 +19,23 @@
         "command": "firefox-css.helloWorld",
         "title": "Hello World"
       }
-    ]
+    ],
+    "configuration": {
+      "title": "Firefox CSS",
+      "properties": {
+        "firefoxCSS.targetPlatform": {
+          "type": "string",
+          "enum": [
+            "Linux",
+            "macOS",
+            "Windows",
+            "All"
+          ],
+          "default": "All",
+          "description": "Used to show/hide platform-specific snippets."
+        }
+      }
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
