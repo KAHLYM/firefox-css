@@ -35,9 +35,9 @@ export function getDesriptionPrefix(platform: string): string {
 	}
 }
 
-class Element {
-	label: string = "";
-	snippet: string = "";
+interface Element {
+	label: string;
+	snippet: string;
 };
 
 export function activate(context: vscode.ExtensionContext) {
