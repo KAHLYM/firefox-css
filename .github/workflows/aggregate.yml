@@ -1,8 +1,8 @@
 name: Aggregate
 
 on:
-  push:
-    branches: [ "feature/aggregate-action"]
+  schedule:
+    - cron: "0 0 1 * *" 
 
 jobs:
   Aggregate:
