@@ -62,7 +62,11 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	context.subscriptions.push(completion);
+	const launch = vscode.commands.registerCommand('firefox-css.launch', () => {
+		vscode.window.showInformationMessage('Launch Firefox!');
+	});
+
+	context.subscriptions.push(completion, launch);
 }
 
 /* istanbul ignore next: Empty function */
