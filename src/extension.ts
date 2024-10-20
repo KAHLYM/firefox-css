@@ -1,5 +1,8 @@
 import * as vscode from 'vscode';
 import json from '../completions.json';
+import { exec } from 'node:child_process';
+
+let output = vscode.window.createOutputChannel("Firefox CSS");
 
 export function isPlatformAllowedByConfiguration(platform: string, targetPlatform_: string = ""): boolean {
 	const targetPlatform = targetPlatform_ ? targetPlatform_ : vscode.workspace.getConfiguration('firefoxCSS').get<string>('targetPlatform');
@@ -35,6 +38,10 @@ export function getDesriptionPrefix(platform: string): string {
 	}
 }
 
+export function getFirefoxExectuable(): string {
+	return `${process.env.PROGRAMFILES}\\Mozilla Firefox\\firefox.exe`;
+}
+
 /* istanbul ignore next: Difficult to unit test */
 export function activate(context: vscode.ExtensionContext) {
 
@@ -63,7 +70,17 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	const launch = vscode.commands.registerCommand('firefox-css.launch', () => {
-		vscode.window.showInformationMessage('Launch Firefox!');
+		const result = exec(`"${getFirefoxExectuable()}"`, (error, _, stderr) => {
+			if (error) {
+				output.appendLine(`Launching Firefox failed with err: ${error.message}`);
+				return;
+			}
+
+			if (stderr) {
+				output.appendLine(`Launching Firefox failed with stderr: ${stderr}`);
+				return;
+			}
+		});
 	});
 
 	context.subscriptions.push(completion, launch);
