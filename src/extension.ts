@@ -38,8 +38,21 @@ export function getDesriptionPrefix(platform: string): string {
 	}
 }
 
-export function getFirefoxExectuable(): string {
-	return `${process.env.PROGRAMFILES}\\Mozilla Firefox\\firefox.exe`;
+export function getFirefoxExectuableLocation(): string | null {
+	switch (process.platform) {
+		case "aix":
+		case "android":
+		case "darwin": // macOS
+		case "freebsd":
+		case "linux":
+		case "openbsd":
+		case "sunos":
+			return null;
+		case "win32": // Windows
+			return `${process.env.PROGRAMFILES}\\Mozilla Firefox\\firefox.exe`;
+		default:
+			return null;
+	}
 }
 
 /* istanbul ignore next: Difficult to unit test */
@@ -70,17 +83,22 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	const launch = vscode.commands.registerCommand('firefox-css.launch', () => {
-		const result = exec(`"${getFirefoxExectuable()}"`, (error, _, stderr) => {
-			if (error) {
-				output.appendLine(`Launching Firefox failed with err: ${error.message}`);
-				return;
-			}
+		const firefoxExecutableLocation = getFirefoxExectuableLocation();
+		if (firefoxExecutableLocation) {
+			const result = exec(`"${firefoxExecutableLocation}"`, (error, _, stderr) => {
+				if (error) {
+					output.appendLine(`Launching Firefox failed with err: ${error.message}`);
+					return;
+				}
 
-			if (stderr) {
-				output.appendLine(`Launching Firefox failed with stderr: ${stderr}`);
-				return;
-			}
-		});
+				if (stderr) {
+					output.appendLine(`Launching Firefox failed with stderr: ${stderr}`);
+					return;
+				}
+			});
+		} else {
+			vscode.window.showWarningMessage("Could not find Firefox executable location.")
+		}
 	});
 
 	context.subscriptions.push(completion, launch);
