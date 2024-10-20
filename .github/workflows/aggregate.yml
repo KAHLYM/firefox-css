@@ -1,0 +1,30 @@
+name: Aggregate
+
+on:
+  schedule:
+    - cron: "0 0 1 * *" 
+
+jobs:
+  Aggregate:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout firefox-css
+      uses: actions/checkout@v4
+      with:
+          path: firefox-css
+    - name: Checkout gecko-dev
+      uses: actions/checkout@v4
+      with:
+          repository: mozilla/gecko-dev
+          path: gecko-dev
+          sparse-checkout: "browser/themes"
+    - name: Setup Python
+      uses: actions/setup-python@v5
+      with:
+        python-version:  '3.12'
+    - name: Install aggregate.requirements.txt
+      working-directory: firefox-css
+      run: pip install -r scripts/aggregate.requirements.txt
+    - name: Run script
+      working-directory: firefox-css
+      run: python scripts/aggregate.py --path "gecko-dev"

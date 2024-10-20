@@ -2,13 +2,22 @@ import glob
 import tinycss2
 import json
 import os
+import argparse
 
-GECKO_DEV = "C:/git/gecko-dev"
+parser = argparse.ArgumentParser("Aggregate")
+parser.add_argument(
+    "--path",
+    help="Path to gecko-dev repository",
+    type=str,
+    nargs="?",
+    default="C:/git/gecko-dev",
+)
+args = parser.parse_args()
 
 
 def get_completions(source: str):
     completions = []
-    for file in glob.glob(f"{GECKO_DEV}/{source}/**/*.css"):
+    for file in glob.glob(f"{args.path}/{source}/**/*.css"):
         with open(file) as f:
             rules = tinycss2.parse_stylesheet(
                 f.read(), skip_comments=True, skip_whitespace=True
