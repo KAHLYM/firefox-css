@@ -44,6 +44,7 @@ export function getDesriptionPrefix(platform: string): string {
 	}
 }
 
+/* istanbul ignore next: Platform dependant */
 export function getFirefoxExectuableLocation(): string | null {
 	const path = vscode.workspace.getConfiguration('firefoxCSS').get<string>('launch.path');
 	if (path && fs.existsSync(path)) {
@@ -56,7 +57,7 @@ export function getFirefoxExectuableLocation(): string | null {
 		case "darwin": // macOS
 		case "freebsd":
 		case "linux":
-		case "openbsd":
+		case "openbsd": 
 		case "sunos":
 			return null;
 		case "win32": // Windows
