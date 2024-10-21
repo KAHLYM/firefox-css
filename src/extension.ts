@@ -76,6 +76,33 @@ export function spawn_(command: string, args?: readonly string[],): void {
 	});
 }
 
+
+export function closeExistingFirefoxExecutables(): void {
+	switch (process.platform) {
+		case "aix":
+		case "android":
+		case "darwin": // macOS
+		case "freebsd":
+		case "linux":
+		case "openbsd":
+		case "sunos":
+			return;
+		case "win32": // Windows
+			spawn_("taskkill", ["/IM", "firefox.exe"]);
+		default:
+			return;
+	}
+}
+
+export function openFirefoxExecutable(): void {
+	const firefoxExecutableLocation = getFirefoxExectuableLocation();
+	if (firefoxExecutableLocation) {
+		spawn_(`${firefoxExecutableLocation}`);
+	} else {
+		vscode.window.showWarningMessage("Could not find Firefox executable location.")
+	}
+}
+
 /* istanbul ignore next: Difficult to unit test */
 export function activate(context: vscode.ExtensionContext) {
 
@@ -104,17 +131,11 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	const launch = vscode.commands.registerCommand('firefox-css.launch', () => {
-		const closeExisting = vscode.workspace.getConfiguration('firefoxCSS').get<boolean>('launch.closeExisting');
-		if (closeExisting) {
-			spawn_("taskkill", ["/IM", "firefox.exe"]);
+		if (vscode.workspace.getConfiguration('firefoxCSS').get<boolean>('launch.closeExisting')) {
+			closeExistingFirefoxExecutables();
 		}
 
-		const firefoxExecutableLocation = getFirefoxExectuableLocation();
-		if (firefoxExecutableLocation) {
-			spawn_(`${firefoxExecutableLocation}`);
-		} else {
-			vscode.window.showWarningMessage("Could not find Firefox executable location.")
-		}
+		openFirefoxExecutable();
 	});
 
 	context.subscriptions.push(completion, launch);
