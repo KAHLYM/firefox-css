@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import json from '../completions.json';
 import { spawn } from 'node:child_process';
+import fs from "fs";
 
 let output = vscode.window.createOutputChannel("Firefox CSS");
 
@@ -39,6 +40,11 @@ export function getDesriptionPrefix(platform: string): string {
 }
 
 export function getFirefoxExectuableLocation(): string | null {
+	const path = vscode.workspace.getConfiguration('firefoxCSS').get<string>('launch.path');
+	if (path && fs.existsSync(path)) {
+		return path;
+	}
+
 	switch (process.platform) {
 		case "aix":
 		case "android":

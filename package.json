@@ -32,7 +32,11 @@
             "All"
           ],
           "default": "All",
-          "description": "Used to show/hide platform-specific snippets."
+          "markdownDescription": "Specifies whether to show/hide platform-specific snippets."
+        },
+        "firefox.launch.path": {
+          "type": "string",
+          "markdownDescription": "Specifies the filepath of `firefox.exe`."
         }
       }
     }
