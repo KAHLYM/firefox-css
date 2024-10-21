@@ -5,8 +5,10 @@ import fs from "fs";
 
 let output = vscode.window.createOutputChannel("Firefox CSS");
 
+const CONFIGURATION_SECTION = "firefoxCSS";
+
 export function isPlatformAllowedByConfiguration(platform: string, targetPlatform_: string = ""): boolean {
-	const targetPlatform = targetPlatform_ ? targetPlatform_ : vscode.workspace.getConfiguration('firefoxCSS').get<string>('targetPlatform');
+	const targetPlatform = targetPlatform_ ? targetPlatform_ : vscode.workspace.getConfiguration(CONFIGURATION_SECTION).get<string>('targetPlatform');
 	switch (platform) {
 		case "linux":
 			if (!["All", "Linux"].includes(targetPlatform!)) {
@@ -46,7 +48,7 @@ export function getDesriptionPrefix(platform: string): string {
 
 /* istanbul ignore next: Platform dependant */
 export function getFirefoxExectuableLocation(): string | null {
-	const path = vscode.workspace.getConfiguration('firefoxCSS').get<string>('launch.path');
+	const path = vscode.workspace.getConfiguration(CONFIGURATION_SECTION).get<string>('launch.path');
 	if (path && fs.existsSync(path)) {
 		return path;
 	}
@@ -131,7 +133,7 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	const launch = vscode.commands.registerCommand('firefox-css.launch', () => {
-		if (vscode.workspace.getConfiguration('firefoxCSS').get<boolean>('launch.closeExisting')) {
+		if (vscode.workspace.getConfiguration(CONFIGURATION_SECTION).get<boolean>('launch.closeExisting')) {
 			closeExistingFirefoxExecutables();
 		}
 
