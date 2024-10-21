@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import json from '../completions.json';
-import { spawn } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import fs from "fs";
 
 let output = vscode.window.createOutputChannel("Firefox CSS");
@@ -74,10 +74,16 @@ export function spawn_(command: string, args?: readonly string[],): void {
 
 	process.stderr.on("data", (data) => {
 		output.appendLine(`Launching ${command} failed with stderr: ${data}`);
-		return;
 	});
 }
 
+export function spawnSync_(command: string, args?: readonly string[],): void {
+	const process = spawnSync(command, args);
+
+	if (process.stderr) {
+		output.appendLine(`Launching ${command} failed with stderr: ${process.stderr}`);
+	}
+}
 
 export function closeExistingFirefoxExecutables(): void {
 	switch (process.platform) {
@@ -90,7 +96,7 @@ export function closeExistingFirefoxExecutables(): void {
 		case "sunos":
 			return;
 		case "win32": // Windows
-			spawn_("taskkill", ["/IM", "firefox.exe"]);
+			spawnSync_("taskkill", ["/F", "/IM", "firefox.exe"]);
 		default:
 			return;
 	}
