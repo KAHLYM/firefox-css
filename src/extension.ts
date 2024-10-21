@@ -1,9 +1,7 @@
 import * as vscode from 'vscode';
 import json from '../completions.json';
-import { spawn, spawnSync } from 'node:child_process';
 import fs from "fs";
-
-let output = vscode.window.createOutputChannel("Firefox CSS");
+import { spawn_, spawnSync_ } from './child_process';
 
 const CONFIGURATION_SECTION = "firefoxCSS";
 
@@ -66,24 +64,6 @@ export function getFirefoxExectuableLocation(): string | null {
 			return `${process.env.PROGRAMFILES}\\Mozilla Firefox\\firefox.exe`;
 		default:
 			return null;
-	}
-}
-
-/* istanbul ignore next: Wrapper functions */
-export function spawn_(command: string, args?: readonly string[],): void {
-	const process = spawn(command, args);
-
-	process.stderr.on("data", (data) => {
-		output.appendLine(`Launching ${command} failed with stderr: ${data}`);
-	});
-}
-
-/* istanbul ignore next: Wrapper functions */
-export function spawnSync_(command: string, args?: readonly string[],): void {
-	const process = spawnSync(command, args);
-
-	if (process.stderr) {
-		output.appendLine(`Launching ${command} failed with stderr: ${process.stderr}`);
 	}
 }
 
