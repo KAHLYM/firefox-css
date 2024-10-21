@@ -69,6 +69,7 @@ export function getFirefoxExectuableLocation(): string | null {
 	}
 }
 
+/* istanbul ignore next: Wrapper functions */
 export function spawn_(command: string, args?: readonly string[],): void {
 	const process = spawn(command, args);
 
@@ -77,6 +78,7 @@ export function spawn_(command: string, args?: readonly string[],): void {
 	});
 }
 
+/* istanbul ignore next: Wrapper functions */
 export function spawnSync_(command: string, args?: readonly string[],): void {
 	const process = spawnSync(command, args);
 
@@ -85,6 +87,7 @@ export function spawnSync_(command: string, args?: readonly string[],): void {
 	}
 }
 
+/* istanbul ignore next: Platform dependant */
 export function closeExistingFirefoxExecutables(): void {
 	switch (process.platform) {
 		case "aix":
