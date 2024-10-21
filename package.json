@@ -37,6 +37,11 @@
         "firefox.launch.path": {
           "type": "string",
           "markdownDescription": "Specifies the filepath of `firefox.exe`."
+        },
+        "firefox.launch.closeExisting": {
+          "type": "boolean",
+          "default": false,
+          "markdownDescription": "Specifies whether to close existing Firefox processes."
         }
       }
     }

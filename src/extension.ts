@@ -57,7 +57,7 @@ export function getFirefoxExectuableLocation(): string | null {
 		case "darwin": // macOS
 		case "freebsd":
 		case "linux":
-		case "openbsd": 
+		case "openbsd":
 		case "sunos":
 			return null;
 		case "win32": // Windows
@@ -95,6 +95,16 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	const launch = vscode.commands.registerCommand('firefox-css.launch', () => {
+		const closeExisting = vscode.workspace.getConfiguration('firefoxCSS').get<boolean>('launch.closeExisting');
+		if (closeExisting) {
+			const killFirefox = spawn("taskkill", ["/IM", "firefox.exe"]);
+
+			killFirefox.stderr.on("data", (data) => {
+				output.appendLine(`Launching Firefox failed with stderr: ${data}`);
+				return;
+			});
+		}
+
 		const firefoxExecutableLocation = getFirefoxExectuableLocation();
 		if (firefoxExecutableLocation) {
 			const firefoxProcess = spawn(`${firefoxExecutableLocation}`);
