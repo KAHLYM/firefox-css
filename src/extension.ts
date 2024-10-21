@@ -67,6 +67,15 @@ export function getFirefoxExectuableLocation(): string | null {
 	}
 }
 
+export function spawn_(command: string, args?: readonly string[],): void {
+	const process = spawn(command, args);
+
+	process.stderr.on("data", (data) => {
+		output.appendLine(`Launching ${command} failed with stderr: ${data}`);
+		return;
+	});
+}
+
 /* istanbul ignore next: Difficult to unit test */
 export function activate(context: vscode.ExtensionContext) {
 
@@ -97,22 +106,12 @@ export function activate(context: vscode.ExtensionContext) {
 	const launch = vscode.commands.registerCommand('firefox-css.launch', () => {
 		const closeExisting = vscode.workspace.getConfiguration('firefoxCSS').get<boolean>('launch.closeExisting');
 		if (closeExisting) {
-			const killFirefox = spawn("taskkill", ["/IM", "firefox.exe"]);
-
-			killFirefox.stderr.on("data", (data) => {
-				output.appendLine(`Launching Firefox failed with stderr: ${data}`);
-				return;
-			});
+			spawn_("taskkill", ["/IM", "firefox.exe"]);
 		}
 
 		const firefoxExecutableLocation = getFirefoxExectuableLocation();
 		if (firefoxExecutableLocation) {
-			const firefoxProcess = spawn(`${firefoxExecutableLocation}`);
-
-			firefoxProcess.stderr.on("data", (data) => {
-				output.appendLine(`Launching Firefox failed with stderr: ${data}`);
-				return;
-			});
+			spawn_(`${firefoxExecutableLocation}`);
 		} else {
 			vscode.window.showWarningMessage("Could not find Firefox executable location.")
 		}
