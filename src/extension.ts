@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import json from '../completions.json';
-import { exec } from 'node:child_process';
+import { spawn } from 'node:child_process';
 
 let output = vscode.window.createOutputChannel("Firefox CSS");
 
@@ -85,16 +85,11 @@ export function activate(context: vscode.ExtensionContext) {
 	const launch = vscode.commands.registerCommand('firefox-css.launch', () => {
 		const firefoxExecutableLocation = getFirefoxExectuableLocation();
 		if (firefoxExecutableLocation) {
-			const result = exec(`"${firefoxExecutableLocation}"`, (error, _, stderr) => {
-				if (error) {
-					output.appendLine(`Launching Firefox failed with err: ${error.message}`);
-					return;
-				}
+			const firefoxProcess = spawn(`${firefoxExecutableLocation}`);
 
-				if (stderr) {
-					output.appendLine(`Launching Firefox failed with stderr: ${stderr}`);
-					return;
-				}
+			firefoxProcess.stderr.on("data", (data) => {
+				output.appendLine(`Launching Firefox failed with stderr: ${data}`);
+				return;
 			});
 		} else {
 			vscode.window.showWarningMessage("Could not find Firefox executable location.")
