@@ -27,7 +27,7 @@ suite('Extension Test Suite', () => {
         { platform: "shared", targetPlatform: "non-platform", allowed: true },
         { platform: "", targetPlatform: "", allowed: true }, // Default
     ].forEach(function (item) {
-        test("isPlatformAllowedByConfiguration return for platform'" + item.platform + " with target platform '" + item.targetPlatform + "'", () => {
+        test("isPlatformAllowedByConfiguration return " + item.allowed + " for platform '" + item.platform + " with target platform '" + item.targetPlatform + "'", () => {
             assert.equal(item.allowed, myExtension.isPlatformAllowedByConfiguration(item.platform, item.targetPlatform));
         });
     });

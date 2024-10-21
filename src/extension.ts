@@ -12,17 +12,22 @@ export function isPlatformAllowedByConfiguration(platform: string, targetPlatfor
 			if (!["All", "Linux"].includes(targetPlatform!)) {
 				return false;
 			}
+			break;
 		case "osx":
 			if (!["All", "macOS"].includes(targetPlatform!)) {
 				return false;
 			}
+			break;
 		case "windows":
 			if (!["All", "Windows"].includes(targetPlatform!)) {
 				return false;
 			}
+			break;
 		default:
-			return true;
+			break;
 	}
+
+	return true;
 }
 
 export function getDesriptionPrefix(platform: string): string {
