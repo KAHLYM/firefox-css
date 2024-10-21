@@ -16,8 +16,8 @@
   "contributes": {
     "commands": [
       {
-        "command": "firefox-css.helloWorld",
-        "title": "Hello World"
+        "command": "firefox-css.launch",
+        "title": "Launch Firefox"
       }
     ],
     "configuration": {
@@ -32,7 +32,11 @@
             "All"
           ],
           "default": "All",
-          "description": "Used to show/hide platform-specific snippets."
+          "markdownDescription": "Specifies whether to show/hide platform-specific snippets."
+        },
+        "firefox.launch.path": {
+          "type": "string",
+          "markdownDescription": "Specifies the filepath of `firefox.exe`."
         }
       }
     }

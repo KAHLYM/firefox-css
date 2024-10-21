@@ -1,5 +1,9 @@
 import * as vscode from 'vscode';
 import json from '../completions.json';
+import { spawn } from 'node:child_process';
+import fs from "fs";
+
+let output = vscode.window.createOutputChannel("Firefox CSS");
 
 export function isPlatformAllowedByConfiguration(platform: string, targetPlatform_: string = ""): boolean {
 	const targetPlatform = targetPlatform_ ? targetPlatform_ : vscode.workspace.getConfiguration('firefoxCSS').get<string>('targetPlatform');
@@ -8,17 +12,22 @@ export function isPlatformAllowedByConfiguration(platform: string, targetPlatfor
 			if (!["All", "Linux"].includes(targetPlatform!)) {
 				return false;
 			}
+			break;
 		case "osx":
 			if (!["All", "macOS"].includes(targetPlatform!)) {
 				return false;
 			}
+			break;
 		case "windows":
 			if (!["All", "Windows"].includes(targetPlatform!)) {
 				return false;
 			}
+			break;
 		default:
-			return true;
+			break;
 	}
+
+	return true;
 }
 
 export function getDesriptionPrefix(platform: string): string {
@@ -32,6 +41,29 @@ export function getDesriptionPrefix(platform: string): string {
 			return `Windows${postfix}`;
 		default:
 			return "";
+	}
+}
+
+/* istanbul ignore next: Platform dependant */
+export function getFirefoxExectuableLocation(): string | null {
+	const path = vscode.workspace.getConfiguration('firefoxCSS').get<string>('launch.path');
+	if (path && fs.existsSync(path)) {
+		return path;
+	}
+
+	switch (process.platform) {
+		case "aix":
+		case "android":
+		case "darwin": // macOS
+		case "freebsd":
+		case "linux":
+		case "openbsd": 
+		case "sunos":
+			return null;
+		case "win32": // Windows
+			return `${process.env.PROGRAMFILES}\\Mozilla Firefox\\firefox.exe`;
+		default:
+			return null;
 	}
 }
 
@@ -62,7 +94,21 @@ export function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	context.subscriptions.push(completion);
+	const launch = vscode.commands.registerCommand('firefox-css.launch', () => {
+		const firefoxExecutableLocation = getFirefoxExectuableLocation();
+		if (firefoxExecutableLocation) {
+			const firefoxProcess = spawn(`${firefoxExecutableLocation}`);
+
+			firefoxProcess.stderr.on("data", (data) => {
+				output.appendLine(`Launching Firefox failed with stderr: ${data}`);
+				return;
+			});
+		} else {
+			vscode.window.showWarningMessage("Could not find Firefox executable location.")
+		}
+	});
+
+	context.subscriptions.push(completion, launch);
 }
 
 /* istanbul ignore next: Empty function */
