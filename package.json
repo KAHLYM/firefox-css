@@ -34,11 +34,11 @@
           "default": "All",
           "markdownDescription": "Specifies whether to show/hide platform-specific snippets."
         },
-        "firefox.launch.path": {
+        "firefoxCSS.launch.path": {
           "type": "string",
           "markdownDescription": "Specifies the filepath of `firefox.exe`."
         },
-        "firefox.launch.closeExisting": {
+        "firefoxCSS.launch.closeExisting": {
           "type": "boolean",
           "default": false,
           "markdownDescription": "Specifies whether to close existing Firefox processes."
