@@ -33,9 +33,9 @@ suite('Extension Test Suite', () => {
     });
 
     [
-        { platform: "linux", descriptionPrefix: "Linux-specific Firefox CSS" },
-        { platform: "osx", descriptionPrefix: "macOS-specific Firefox CSS" },
-        { platform: "windows", descriptionPrefix: "Windows-specific Firefox CSS" },
+        { platform: "linux", descriptionPrefix: "Linux-specific Firefox CSS\n" },
+        { platform: "osx", descriptionPrefix: "macOS-specific Firefox CSS\n" },
+        { platform: "windows", descriptionPrefix: "Windows-specific Firefox CSS\n" },
         { platform: "non-platform", descriptionPrefix: "" },
     ].forEach(function (item) {
         test("getDesriptionPrefix return for '" + item.platform + "'", () => {
