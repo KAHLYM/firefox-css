@@ -1,8 +1,8 @@
-import glob
-import tinycss2
+import argparse
+import collections
 import json
 import os
-import argparse
+import tinycss2
 
 parser = argparse.ArgumentParser("Aggregate")
 parser.add_argument(
@@ -38,38 +38,32 @@ def expand_values(components) -> str:
 
 def get_completions(source: str):
     completions = []
-    for file in glob.glob(f"{args.path}/{source}/**/*.css"):
-        with open(file) as f:
-            rules = tinycss2.parse_stylesheet(
-                f.read(), skip_whitespace=True
-            )
 
-            for rule in rules:
+    with open(source) as f:
+        rules = tinycss2.parse_stylesheet(f.read(), skip_whitespace=True)
 
-                # No interest in comments that are not within rule
-                if isinstance(rule, tinycss2.ast.Comment):
-                    continue
+        for rule in rules:
 
-                prelude = expand_values(rule.prelude) if rule.prelude else ""
-                content = expand_values(rule.content) if rule.content else ""
+            # No interest in comments that are not within rule
+            if isinstance(rule, tinycss2.ast.Comment):
+                continue
 
-                completions.append(
-                    {"label": prelude, "snippet": f"{prelude}{{{content}}}"}
-                )
+            prelude = expand_values(rule.prelude) if rule.prelude else ""
+            content = expand_values(rule.content) if rule.content else ""
+
+            completions.append({"label": prelude, "snippet": f"{prelude}{{{content}}}"})
 
     return completions
 
 
-sources = [
-    "browser/themes/linux",
-    "browser/themes/osx",
-    "browser/themes/shared",
-    "browser/themes/windows",
-]
-
-completions = {}
-for source in sources:
-    completions[os.path.basename(source)] = get_completions(source)
+completions = collections.defaultdict(list)
+for root, dirs, files in os.walk(os.path.join(args.path, "browser")):
+    for file in files:
+        if file.endswith(".css"):
+            source = os.path.join(root, file)
+            dir = os.path.basename(root)
+            key = dir if dir in ["linux", "osx", "windows"] else "shared"
+            completions[key].extend(get_completions(source))
 
 with open("./completions.json", "w") as f:
     json.dump({"completions": completions}, f)
