@@ -20,10 +20,12 @@ def expand_values(components) -> str:
 
     for component in components:
 
-        if isinstance(component, tinycss2.ast.FunctionBlock):
-            value += f"{component.name}({expand_values(component.arguments)})"
+        if isinstance(component, tinycss2.ast.Comment):
+            value += f"/*{component.value}*/"
         elif isinstance(component, tinycss2.ast.CurlyBracketsBlock):
             value += f"{{{expand_values(component.content)}}}"
+        elif isinstance(component, tinycss2.ast.FunctionBlock):
+            value += f"{component.name}({expand_values(component.arguments)})"
         elif isinstance(component, tinycss2.ast.SquareBracketsBlock):
             value += f"[{expand_values(component.content)}]"
         elif isinstance(component, tinycss2.ast.ParenthesesBlock):
@@ -39,10 +41,14 @@ def get_completions(source: str):
     for file in glob.glob(f"{args.path}/{source}/**/*.css"):
         with open(file) as f:
             rules = tinycss2.parse_stylesheet(
-                f.read(), skip_comments=True, skip_whitespace=True
+                f.read(), skip_whitespace=True
             )
 
             for rule in rules:
+
+                # No interest in comments that are not within rule
+                if isinstance(rule, tinycss2.ast.Comment):
+                    continue
 
                 prelude = expand_values(rule.prelude) if rule.prelude else ""
                 content = expand_values(rule.content) if rule.content else ""
