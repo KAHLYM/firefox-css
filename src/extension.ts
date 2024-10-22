@@ -90,7 +90,7 @@ export function openFirefoxExecutable(): void {
 	if (firefoxExecutableLocation) {
 		spawn_(`${firefoxExecutableLocation}`);
 	} else {
-		vscode.window.showWarningMessage("Could not find Firefox executable location.")
+		vscode.window.showWarningMessage("Could not find Firefox executable location.");
 	}
 }
 
