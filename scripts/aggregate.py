@@ -51,7 +51,13 @@ def get_completions(source: str):
             prelude = expand_values(rule.prelude) if rule.prelude else ""
             content = expand_values(rule.content) if rule.content else ""
 
-            completions.append({"label": prelude, "snippet": f"{prelude}{{{content}}}"})
+            completions.append(
+                {
+                    "label": prelude,
+                    "snippet": f"{prelude}{{{content}}}",
+                    "source": source.replace("\\", "/").removeprefix(f"{args.path}/"),
+                }
+            )
 
     return completions
 
