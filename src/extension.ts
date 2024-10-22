@@ -111,7 +111,7 @@ export function activate(context: vscode.ExtensionContext) {
 				// @ts-ignore: TS2488
 				for (const element of values) {
 					const completion = new vscode.CompletionItem({ label: element.label!, description: `Firefox CSS` }, vscode.CompletionItemKind.Snippet);
-					completion.documentation = new vscode.MarkdownString(`${getDesriptionPrefix(platform)}\`\`\`css\n${element.snippet!}`);
+					completion.documentation = new vscode.MarkdownString(`\`\`\`css\n${element.snippet!}\n\`\`\`\n\nSource: ${element.source}`);
 					completion.insertText = new vscode.SnippetString(element.snippet!);
 					completions.push(completion);
 				};
