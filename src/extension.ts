@@ -130,6 +130,14 @@ export function activate(context: vscode.ExtensionContext) {
 	});
 
 	context.subscriptions.push(completion, launch);
+
+	vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
+		if (vscode.workspace.getConfiguration(CONFIGURATION_SECTION).get<boolean>('launch.onSave')) {
+			if (document.fileName.endsWith("userChrome.css")) {
+				vscode.commands.executeCommand("firefox-css.launch");
+			}
+		}
+	})
 }
 
 /* istanbul ignore next: Empty function */
