@@ -33,7 +33,7 @@ jobs:
       run: pip install -r scripts/aggregate.requirements.txt
     - name: Run script
       working-directory: firefox-css
-      run: python scripts/aggregate.py --input "gecko-dev" --output "./completions/${{ matrix.source }}.json"
+      run: python scripts/aggregate.py --input "./gecko-dev" --output "./completions/${{ matrix.source }}.json"
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
