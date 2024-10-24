@@ -66,19 +66,13 @@ def get_completions(source: str):
 completions = collections.defaultdict(list)
 for root, dirs, files in os.walk(os.path.join(args.input, "browser")):
     for file in files:
-        print(f"Found file: {file}")
         if file.endswith(".css"):
-            print(f"Parsing CSS file: {file}")
 
             source = os.path.join(root, file)
             dir = os.path.basename(root)
             key = dir if dir in ["linux", "osx", "windows"] else "shared"
             completions[key].extend(get_completions(source))
 
-print(f"Writings completions: {completions}")
-
-os.makedirs("./completions", exist_ok=True)
+os.makedirs(os.path.dirname(args.output), exist_ok=True, parents=True)
 with open(args.output, "w") as f:
     json.dump({"completions": completions}, f)
-
-print(f"Script complete")
