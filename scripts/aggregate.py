@@ -73,5 +73,5 @@ for root, dirs, files in os.walk(os.path.join(args.input, "browser")):
             completions[key].extend(get_completions(source))
 
 os.makedirs("./completions", exist_ok=True)
-with open("./completions/master.json", "w") as f:
+with open(args.output, "w") as f:
     json.dump({"completions": completions}, f)
