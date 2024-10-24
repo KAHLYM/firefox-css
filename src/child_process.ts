@@ -1,7 +1,5 @@
-import * as vscode from 'vscode';
 import { spawn, spawnSync } from 'node:child_process';
-
-let output = vscode.window.createOutputChannel("Firefox CSS");
+import { output } from './extension'
 
 /* istanbul ignore next: Wrapper functions */
 export function spawn_(command: string, args?: readonly string[],): void {
