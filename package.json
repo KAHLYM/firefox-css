@@ -23,17 +23,6 @@
     "configuration": {
       "title": "Firefox CSS",
       "properties": {
-        "firefoxCSS.targetPlatform": {
-          "type": "string",
-          "enum": [
-            "Linux",
-            "macOS",
-            "Windows",
-            "All"
-          ],
-          "default": "All",
-          "markdownDescription": "Specifies whether to show/hide platform-specific snippets."
-        },
         "firefoxCSS.launch.closeExisting": {
           "type": "boolean",
           "default": false,
@@ -47,6 +36,27 @@
           "type": "boolean",
           "default": false,
           "markdownDescription": "Specifies whether to launch Firefox on save of `userChrome.css`."
+        },
+        "firefoxCSS.source": {
+          "type": "string",
+          "enum": [
+            "beta",
+            "master",
+            "release"
+          ],
+          "default": "release",
+          "markdownDescription": "Specifies the source branch."
+        },
+        "firefoxCSS.targetPlatform": {
+          "type": "string",
+          "enum": [
+            "Linux",
+            "macOS",
+            "Windows",
+            "All"
+          ],
+          "default": "All",
+          "markdownDescription": "Specifies whether to show/hide platform-specific snippets."
         }
       }
     }
