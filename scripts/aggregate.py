@@ -73,6 +73,6 @@ for root, dirs, files in os.walk(os.path.join(args.input, "browser")):
             key = dir if dir in ["linux", "osx", "windows"] else "shared"
             completions[key].extend(get_completions(source))
 
-os.makedirs(os.path.dirname(args.output), exist_ok=True, parents=True)
+os.makedirs(os.path.dirname(args.output), exist_ok=True)
 with open(args.output, "w") as f:
     json.dump({"completions": completions}, f)
