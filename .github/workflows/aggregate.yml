@@ -36,6 +36,9 @@ jobs:
       working-directory: firefox-css
       run: python scripts/aggregate.py --input "gecko-dev" --output "./completions/${{ matrix.source }}"
   Commit:
+    needs: Aggregate
+    runs-on: ubuntu-latest
+    steps:
     - name: Commit changes
       working-directory: firefox-css
       run: |
