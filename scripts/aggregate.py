@@ -66,6 +66,7 @@ def get_completions(source: str):
 completions = collections.defaultdict(list)
 for root, dirs, files in os.walk(os.path.join(args.input, "browser")):
     for file in files:
+        print(f"Found file: {file}")
         if file.endswith(".css"):
             print(f"Parsing CSS file: {file}")
 
