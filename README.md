@@ -4,8 +4,8 @@ This extension provides an environment to develop Firefox `userChrome.css`.
 
 #### Snippets
 
-The headline feature of this extension is to provide snippets sourced from [gecko-dev](https://github.com/mozilla/gecko-dev). These are updated at 00:00 UTC. There are three sources available to be configured: beta, master and release which mirror the static branches of the gecko-dev repository.
+CSS snippets are sourced from [gecko-dev](https://github.com/mozilla/gecko-dev) and are updated daily at 00:00 UTC. The source branch can be configured to use beta, master or release.
 
 #### Launch of Firefox on save
 
-Firefox can be launched on save of `userChrome.css`. It may beneficial to use this configuration in combination with the configuration to close existing Firefox processes.
+Firefox can be launched on save of `userChrome.css` and existing Firefox processes can be closed.
