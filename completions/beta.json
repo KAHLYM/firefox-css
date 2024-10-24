@@ -1,0 +1,11 @@
+{
+    "completions": {
+        "shared": [
+            {
+                "label": "#beta-id",
+                "snippet": "#beta-id {\n  color: red;\n}",
+                "source": "directory/beta.css"
+            }
+        ]
+    }
+}

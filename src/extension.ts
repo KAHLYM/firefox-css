@@ -99,7 +99,7 @@ export function openFirefoxExecutable(): void {
 /* istanbul ignore next: Difficult to unit test */
 export async function activate(context: vscode.ExtensionContext) {
 
-	await downloadCompletions();
+	await downloadCompletions(vscode.workspace.getConfiguration(CONFIGURATION_SECTION).get<string>('source')!);
 
 	const completion = vscode.languages.registerCompletionItemProvider({ pattern: '**/userChrome.css' }, {
 		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {

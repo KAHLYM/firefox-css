@@ -1,0 +1,11 @@
+{
+    "completions": {
+        "shared": [
+            {
+                "label": "#master-id",
+                "snippet": "#master-id {\n  color: green;\n}",
+                "source": "directory/master.css"
+            }
+        ]
+    }
+}

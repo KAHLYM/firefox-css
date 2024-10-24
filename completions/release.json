@@ -1,0 +1,11 @@
+{
+    "completions": {
+        "shared": [
+            {
+                "label": "#release-id",
+                "snippet": "#release-id {\n  color: blue;\n}",
+                "source": "directory/release.css"
+            }
+        ]
+    }
+}
