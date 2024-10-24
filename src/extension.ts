@@ -101,6 +101,12 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	await downloadCompletions(vscode.workspace.getConfiguration(CONFIGURATION_SECTION).get<string>('source')!);
 
+	const configurationChangedSource = vscode.workspace.onDidChangeConfiguration(event => {
+		if (event.affectsConfiguration(`${CONFIGURATION_SECTION}.source`)) {
+			downloadCompletions(vscode.workspace.getConfiguration(CONFIGURATION_SECTION).get<string>('source')!);
+		}
+	});
+
 	const completion = vscode.languages.registerCompletionItemProvider({ pattern: '**/userChrome.css' }, {
 		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
 
@@ -133,7 +139,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		openFirefoxExecutable();
 	});
 
-	context.subscriptions.push(completion, launch);
+	context.subscriptions.push(configurationChangedSource, completion, launch);
 
 	vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
 		if (vscode.workspace.getConfiguration(CONFIGURATION_SECTION).get<boolean>('launch.onSave')) {
