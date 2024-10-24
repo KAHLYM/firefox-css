@@ -1,5 +1,5 @@
 import { spawn, spawnSync } from 'node:child_process';
-import { output } from './extension'
+import { output } from './extension';
 
 /* istanbul ignore next: Wrapper functions */
 export function spawn_(command: string, args?: readonly string[],): void {

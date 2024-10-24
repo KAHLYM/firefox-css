@@ -141,7 +141,7 @@ export async function activate(context: vscode.ExtensionContext) {
 				vscode.commands.executeCommand("firefox-css.launch");
 			}
 		}
-	})
+	});
 }
 
 /* istanbul ignore next: Empty function */
