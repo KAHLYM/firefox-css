@@ -40,7 +40,6 @@ jobs:
       with:
           path: firefox-css
           token: ${{ secrets.GITHUB_TOKEN }}
-          ref: ${{ github.event.pull_request.head.ref }}
     - name: Commit changes
       working-directory: firefox-css
       run: |
