@@ -40,6 +40,8 @@ jobs:
         name: completion-${{ matrix.source }}
         path: ./completions/${{ matrix.source }}.json
   Commit:
+    permissions:
+      contents: write
     needs: Aggregate
     runs-on: ubuntu-latest
     steps:
