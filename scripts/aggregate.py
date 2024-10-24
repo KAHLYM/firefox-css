@@ -6,12 +6,13 @@ import tinycss2
 
 parser = argparse.ArgumentParser("Aggregate")
 parser.add_argument(
-    "--path",
+    "--input",
     help="Path to gecko-dev repository",
     type=str,
     nargs="?",
     default="C:/git/gecko-dev",
 )
+parser.add_argument("--output", help="Path to write completions", type=str)
 args = parser.parse_args()
 
 
@@ -55,7 +56,7 @@ def get_completions(source: str):
                 {
                     "label": prelude,
                     "snippet": f"{prelude}{{{content}}}",
-                    "source": source.replace("\\", "/").removeprefix(f"{args.path}/"),
+                    "source": source.replace("\\", "/").removeprefix(f"{args.input}/"),
                 }
             )
 
@@ -63,7 +64,7 @@ def get_completions(source: str):
 
 
 completions = collections.defaultdict(list)
-for root, dirs, files in os.walk(os.path.join(args.path, "browser")):
+for root, dirs, files in os.walk(os.path.join(args.input, "browser")):
     for file in files:
         if file.endswith(".css"):
             source = os.path.join(root, file)
@@ -71,5 +72,6 @@ for root, dirs, files in os.walk(os.path.join(args.path, "browser")):
             key = dir if dir in ["linux", "osx", "windows"] else "shared"
             completions[key].extend(get_completions(source))
 
-with open("./completions.json", "w") as f:
+os.makedirs("./completions", exist_ok=True)
+with open("./completions/master.json", "w") as f:
     json.dump({"completions": completions}, f)
