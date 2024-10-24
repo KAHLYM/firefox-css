@@ -2,7 +2,7 @@ name: Aggregate
 
 on:
   push:
-    - branches: [ "feature/gecko-dev-branch" ]
+    branches: [ "feature/gecko-dev-branch" ]
   schedule:
     - cron: "0 0 1 * *" 
 
