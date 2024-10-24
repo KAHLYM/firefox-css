@@ -34,3 +34,18 @@ jobs:
     - name: Run script
       working-directory: firefox-css
       run: python scripts/aggregate.py --input "gecko-dev" --output "./completions/${{ matrix.source }}"
+  Commit:
+    - name: Checkout firefox-css
+      uses: actions/checkout@v4
+      with:
+          path: firefox-css
+          token: ${{ secrets.GITHUB_TOKEN }}
+          ref: ${{ github.event.pull_request.head.ref }}
+    - name: Commit changes
+      working-directory: firefox-css
+      run: |
+        git config --global user.name 'Firefox CSS Aggregate GitHub Action'
+        git config --global user.email 'wrightci01s@gmail.com'
+        git add .
+        git diff-index --quiet HEAD || git commit -m "Auto updating completions"
+        git push
