@@ -17,7 +17,6 @@ jobs:
       uses: actions/checkout@v4
       with:
           path: firefox-css
-          token: ${{ secrets.GITHUB_TOKEN }}
     - name: Checkout gecko-dev
       uses: actions/checkout@v4
       with:
@@ -35,12 +34,25 @@ jobs:
     - name: Run script
       working-directory: firefox-css
       run: python scripts/aggregate.py --input "gecko-dev" --output "./completions/${{ matrix.source }}"
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: completions
+        path: ./completions/*.json
   Commit:
     needs: Aggregate
     runs-on: ubuntu-latest
     steps:
+    - name: Checkout firefox-css
+      uses: actions/checkout@v4
+      with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+    - name: Download artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: completions
+        path: ./
     - name: Commit changes
-      working-directory: firefox-css
       run: |
         git config --global user.name 'Firefox CSS Aggregate GitHub Action'
         git config --global user.email 'wrightci01s@gmail.com'
