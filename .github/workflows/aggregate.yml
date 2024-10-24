@@ -9,6 +9,9 @@ on:
 jobs:
   Aggregate:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        source: [beta, master, release]
     steps:
     - name: Checkout firefox-css
       uses: actions/checkout@v4
@@ -17,8 +20,9 @@ jobs:
     - name: Checkout gecko-dev
       uses: actions/checkout@v4
       with:
-          repository: mozilla/gecko-dev
           path: gecko-dev
+          ref: ${{ matrix.source }}
+          repository: mozilla/gecko-dev
           sparse-checkout: "browser/themes"
     - name: Setup Python
       uses: actions/setup-python@v5
@@ -29,4 +33,4 @@ jobs:
       run: pip install -r scripts/aggregate.requirements.txt
     - name: Run script
       working-directory: firefox-css
-      run: python scripts/aggregate.py --path "gecko-dev"
+      run: python scripts/aggregate.py --path "gecko-dev" --output "./completions/${{ matrix.source }}"
