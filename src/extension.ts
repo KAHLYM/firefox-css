@@ -3,6 +3,7 @@ import fs from "fs";
 import { spawn_, spawnSync_ } from './child_process';
 import { completions, downloadCompletions } from './completions';
 var constants = require('./constants');
+import configuration = require('./configuration');
 
 export const output = vscode.window.createOutputChannel(constants.extension.NAME);
 
@@ -13,7 +14,7 @@ const geckoDevPlatforms = Object.freeze({
 });
 
 export function isPlatformAllowedByConfiguration(platform: string, targetPlatform_: string = ""): boolean {
-	const targetPlatform = targetPlatform_ ? targetPlatform_ : vscode.workspace.getConfiguration(constants.configuration.SECTION).get<string>(constants.configuration.targetPlatform.KEY);
+	const targetPlatform = targetPlatform_ ? targetPlatform_ : configuration.get<string>(constants.configuration.targetPlatform.KEY);
 	const targetPlatforms = constants.configuration.targetPlatform;
 	switch (platform) {
 		case geckoDevPlatforms.LINUX:
@@ -44,7 +45,7 @@ export function getDesriptionPrefix(platform: string): string {
 /* istanbul ignore next: Platform dependant */
 export function getFirefoxExectuableLocation(): string | null {
 	// Return user configuration if provided
-	const path = vscode.workspace.getConfiguration(constants.configuration.SECTION).get<string>(constants.configuration.launchPath.KEY);
+	const path = configuration.get<string>(constants.configuration.launchPath.KEY);
 	if (path && fs.existsSync(path)) {
 		return path;
 	}
@@ -90,11 +91,11 @@ export function openFirefoxExecutable(): void {
 /* istanbul ignore next: Difficult to unit test */
 export async function activate(context: vscode.ExtensionContext) {
 
-	await downloadCompletions(vscode.workspace.getConfiguration(constants.configuration.SECTION).get<string>(constants.configuration.source.KEY)!);
+	await downloadCompletions(configuration.get<string>(constants.configuration.source.KEY)!);
 
 	const configurationChangedSource = vscode.workspace.onDidChangeConfiguration(event => {
 		if (event.affectsConfiguration(`${constants.configuration.SECTION}.${constants.configuration.source.KEY}`)) {
-			downloadCompletions(vscode.workspace.getConfiguration(constants.configuration.SECTION).get<string>(constants.configuration.source.KEY)!);
+			downloadCompletions(configuration.get<string>(constants.configuration.source.KEY)!);
 		}
 	});
 
@@ -123,7 +124,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 
 	const launch = vscode.commands.registerCommand(constants.command.LAUNCH, () => {
-		if (vscode.workspace.getConfiguration(constants.configuration.SECTION).get<boolean>(constants.configuration.launchCloseExisting.KEY)) {
+		if (configuration.get<boolean>(constants.configuration.launchCloseExisting.KEY)) {
 			closeExistingFirefoxExecutables();
 		}
 
@@ -133,7 +134,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	context.subscriptions.push(configurationChangedSource, completion, launch);
 
 	vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
-		if (vscode.workspace.getConfiguration(constants.configuration.SECTION).get<boolean>(constants.configuration.launchOnSave.KEY)) {
+		if (configuration.get<boolean>(constants.configuration.launchOnSave.KEY)) {
 			if (document.fileName.endsWith(constants.firefox.file.USERCHROME_CSS)) {
 				vscode.commands.executeCommand(constants.command.LAUNCH);
 			}
