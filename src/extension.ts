@@ -73,14 +73,14 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	await downloadCompletions(configuration.get<string>(constants.configuration.source.KEY)!);
 
-	const configurationChangedSource = vscode.workspace.onDidChangeConfiguration(event => {
+	const onChangeConfigurationSource = vscode.workspace.onDidChangeConfiguration(event => {
 		if (event.affectsConfiguration(`${constants.configuration.SECTION}.${constants.configuration.source.KEY}`)) {
 			downloadCompletions(configuration.get<string>(constants.configuration.source.KEY)!);
 		}
 	});
 
-	const completion = vscode.languages.registerCompletionItemProvider({ pattern: `**/${constants.firefox.file.USERCHROME_CSS}` }, {
-		provideCompletionItems(document: vscode.TextDocument, position: vscode.Position, token: vscode.CancellationToken, context: vscode.CompletionContext) {
+	const completionItemProviderUserChrome = vscode.languages.registerCompletionItemProvider({ pattern: `**/${constants.firefox.file.USERCHROME_CSS}` }, {
+		provideCompletionItems(_document: vscode.TextDocument, _position: vscode.Position, _token: vscode.CancellationToken, _context: vscode.CompletionContext) {
 
 			let completionItems: vscode.CompletionItem[] = [];
 
@@ -103,7 +103,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	const launch = vscode.commands.registerCommand(constants.command.LAUNCH, () => {
+	const commandLaunch = vscode.commands.registerCommand(constants.command.LAUNCH, () => {
 		if (configuration.get<boolean>(constants.configuration.launchCloseExisting.KEY)) {
 			closeExistingFirefoxExecutables();
 		}
@@ -111,7 +111,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		openFirefoxExecutable();
 	});
 
-	context.subscriptions.push(configurationChangedSource, completion, launch);
+	context.subscriptions.push(commandLaunch, completionItemProviderUserChrome, onChangeConfigurationSource);
 
 	vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
 		if (configuration.get<boolean>(constants.configuration.launchOnSave.KEY)) {
