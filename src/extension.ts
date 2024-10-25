@@ -28,20 +28,6 @@ export function isPlatformAllowedByConfiguration(platform: string, targetPlatfor
 	}
 }
 
-export function getDesriptionPrefix(platform: string): string {
-	const postfix: string = "-specific Firefox CSS\n";
-	switch (platform) {
-		case geckoDevPlatforms.LINUX:
-			return `${constants.configuration.targetPlatform.enum.LINUX}${postfix}`;
-		case geckoDevPlatforms.OSX:
-			return `${constants.configuration.targetPlatform.enum.MACOS}${postfix}`;
-		case geckoDevPlatforms.WINDOWS:
-			return `${constants.configuration.targetPlatform.enum.WINDOWS}${postfix}`;
-		default:
-			return "";
-	}
-}
-
 /* istanbul ignore next: Platform dependant */
 export function getFirefoxExectuableLocation(): string | null {
 	// Return user configuration if provided

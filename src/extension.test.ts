@@ -31,15 +31,4 @@ suite('Extension Test Suite', () => {
             assert.equal(item.allowed, myExtension.isPlatformAllowedByConfiguration(item.platform, item.targetPlatform));
         });
     });
-
-    [
-        { platform: "linux", descriptionPrefix: "Linux-specific Firefox CSS\n" },
-        { platform: "osx", descriptionPrefix: "macOS-specific Firefox CSS\n" },
-        { platform: "windows", descriptionPrefix: "Windows-specific Firefox CSS\n" },
-        { platform: "non-platform", descriptionPrefix: "" },
-    ].forEach(function (item) {
-        test("getDesriptionPrefix return for '" + item.platform + "'", () => {
-            assert.equal(item.descriptionPrefix, myExtension.getDesriptionPrefix(item.platform));
-        });
-    });
 });
