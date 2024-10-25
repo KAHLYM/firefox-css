@@ -79,7 +79,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	const completionItemProviderUserChrome = vscode.languages.registerCompletionItemProvider({ pattern: `**/${constants.firefox.file.USERCHROME_CSS}` }, {
+	const completionItemProviderUserChrome = vscode.languages.registerCompletionItemProvider({ pattern: `**/${constants.firefox.file.USERCHROME}` }, {
 		provideCompletionItems(_document: vscode.TextDocument, _position: vscode.Position, _token: vscode.CancellationToken, _context: vscode.CompletionContext) {
 
 			let completionItems: vscode.CompletionItem[] = [];
