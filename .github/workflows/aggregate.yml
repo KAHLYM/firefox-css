@@ -2,7 +2,7 @@ name: Aggregate
 
 on:
   schedule:
-    - cron: "0/30 * * * *"
+    - cron: "0 0 * * *"
 
 jobs:
   Aggregate:
