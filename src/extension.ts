@@ -9,7 +9,7 @@ export const output = vscode.window.createOutputChannel(constants.extension.NAME
 
 export function isPlatformAllowedByConfiguration(platform: string, targetPlatform_: string = ""): boolean {
 	const targetPlatform = targetPlatform_ ? targetPlatform_ : configuration.get<string>(constants.configuration.targetPlatform.KEY);
-	const targetPlatforms = constants.configuration.targetPlatform;
+	const targetPlatforms = constants.configuration.targetPlatform.enum;
 	switch (platform) {
 		case "linux":
 			return [targetPlatforms.ALL, targetPlatforms.LINUX].includes(targetPlatform!);
