@@ -22,7 +22,6 @@ export function isPlatformAllowedByConfiguration(platform: string, targetPlatfor
 	}
 }
 
-/* istanbul ignore next: Platform dependant */
 export function getFirefoxExectuableLocation(): string | null {
 	// Return user configuration if provided
 	const path = configuration.get<string>(constants.configuration.launchPath.KEY);
@@ -44,7 +43,6 @@ export function getFirefoxExectuableLocation(): string | null {
 	}
 }
 
-/* istanbul ignore next: Platform dependant */
 export function closeExistingFirefoxExecutables(): void {
 	switch (process.platform) {
 		case constants.platform.DARWIN:
@@ -68,7 +66,6 @@ export function openFirefoxExecutable(): void {
 	}
 }
 
-/* istanbul ignore next: Difficult to unit test */
 export async function activate(context: vscode.ExtensionContext) {
 
 	await downloadCompletions(configuration.get<string>(constants.configuration.source.KEY)!);
@@ -122,5 +119,4 @@ export async function activate(context: vscode.ExtensionContext) {
 	});
 }
 
-/* istanbul ignore next: Empty function */
 export function deactivate() { }
