@@ -6,7 +6,7 @@ export async function downloadCompletions(source: string): Promise<void> {
     try {
         const response = await fetch(url);
         const text = await response.text();
-        const json = JSON.parse(JSON.stringify(text));
+        const json = JSON.parse(text);
 
         output.appendLine(`Fetched completions (${text.length} bytes) from: ${url}`);
         completions = json;
