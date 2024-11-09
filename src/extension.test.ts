@@ -24,4 +24,8 @@ suite('Extension Test Suite', () => {
             assert.equal(item.allowed, extension.isPlatformAllowedByConfiguration(item.platform, item.targetPlatform));
         });
     });
+
+    test("deactivate", () => {
+        assert.doesNotThrow(() => extension.deactivate());
+    });
 });
