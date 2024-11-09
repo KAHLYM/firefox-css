@@ -10,13 +10,7 @@ suite('Completions Test Suite', () => {
         { source: constants.configuration.source.RELEASE },
     ].forEach(function (item) {
         test(`downloadCompletions does not throw given expected configuration '${item.source}'`, () => {
-            assert.doesNotThrow(() => completions.downloadCompletions(item.source));
+            assert.doesNotThrow(() => completions.getCompletions(item.source));
         });
-    });
-
-    test(`downloadCompletions sets completions export`, async () => {
-        assert.equal(undefined, completions.completions);
-        await completions.downloadCompletions(constants.configuration.source.MASTER);
-        assert.notEqual(undefined, completions.completions);
     });
 });

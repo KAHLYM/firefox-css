@@ -1,7 +1,7 @@
 import * as vscode from 'vscode';
 import fs from "fs";
 import { spawn_, spawnSync_ } from './childProcess';
-import { completions, downloadCompletions } from './completions';
+import { getCompletions } from './completions';
 var constants = require('./constants');
 import configuration = require('./configuration');
 
@@ -71,13 +71,14 @@ export function openFirefoxExecutable(): void {
 }
 
 /* istanbul ignore next: should be refactored */
+let completions: any;
 export async function activate(context: vscode.ExtensionContext) {
 
-	await downloadCompletions(configuration.get<string>(constants.configuration.source.KEY)!);
+	completions = await getCompletions(configuration.get<string>(constants.configuration.source.KEY)!);
 
 	const onChangeConfigurationSource = vscode.workspace.onDidChangeConfiguration(event => {
 		if (event.affectsConfiguration(`${constants.configuration.SECTION}.${constants.configuration.source.KEY}`)) {
-			downloadCompletions(configuration.get<string>(constants.configuration.source.KEY)!);
+			completions = getCompletions(configuration.get<string>(constants.configuration.source.KEY)!);
 		}
 	});
 
