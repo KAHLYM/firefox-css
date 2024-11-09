@@ -39,7 +39,7 @@ export function getFirefoxExectuableLocation(): string | null {
 		case constants.platform.SUNOS:
 			return null;
 		case constants.platform.WIN32:
-			return `${process.env.PROGRAMFILES}\\Mozilla Firefox\\${constants.firefox.file.USERCHROME_CSS}`;
+			return `${process.env.PROGRAMFILES}\\Mozilla Firefox\\${constants.firefox.file.EXECUTABLE}`;
 		default:
 			return null;
 	}
@@ -118,7 +118,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
 		if (configuration.get<boolean>(constants.configuration.launchOnSave.KEY)) {
-			if (document.fileName.endsWith(constants.firefox.file.USERCHROME_CSS)) {
+			if (document.fileName.endsWith(constants.firefox.file.USERCHROME)) {
 				vscode.commands.executeCommand(constants.command.LAUNCH);
 			}
 		}
