@@ -3,7 +3,6 @@ import { output } from './extension';
 const constants = require('./constants');
 const path = require('path');
 
-/* istanbul ignore next: laziness */
 export async function getCompletions(source: string): Promise<any> {
     // This should be a JSON object
     let completions: any = await download(source);
@@ -23,7 +22,6 @@ export async function getCompletions(source: string): Promise<any> {
     return completions;
 }
 
-/* istanbul ignore next: laziness */
 async function download(source: string): Promise<any> {
     const url = `https://raw.githubusercontent.com/KAHLYM/firefox-css/refs/heads/completions/completions/${source}.json`;
     try {
@@ -43,12 +41,10 @@ async function download(source: string): Promise<any> {
     }
 }
 
-/* istanbul ignore next: platform dependant */
-function getCacheUri(source: string): vscode.Uri {
+function getCacheUri(source: string) : vscode.Uri {
     return vscode.Uri.file(`${process.env.LOCALAPPDATA!}${path.sep}${constants.extension.NAME}${path.sep}${source}.json`);
 }
 
-/* istanbul ignore next: laziness */
 async function getCache(source: string): Promise<any> {
     try {
         const uri: vscode.Uri = getCacheUri(source);
@@ -67,7 +63,6 @@ async function getCache(source: string): Promise<any> {
     }
 }
 
-/* istanbul ignore next: laziness */
 function setCache(source: string, content: string): void {
     try {
         const encoder = new TextEncoder();

@@ -74,17 +74,14 @@ export function openFirefoxExecutable(): void {
 let completions: any;
 export async function activate(context: vscode.ExtensionContext) {
 
-	/* istanbul ignore next: laziness */
 	completions = await getCompletions(configuration.get<string>(constants.configuration.source.KEY)!);
 
-	/* istanbul ignore next: laziness */
 	const onChangeConfigurationSource = vscode.workspace.onDidChangeConfiguration(event => {
 		if (event.affectsConfiguration(`${constants.configuration.SECTION}.${constants.configuration.source.KEY}`)) {
 			completions = getCompletions(configuration.get<string>(constants.configuration.source.KEY)!);
 		}
 	});
 
-	/* istanbul ignore next: laziness */
 	const completionItemProviderUserChrome = vscode.languages.registerCompletionItemProvider({ pattern: `**/${constants.firefox.file.USERCHROME}` }, {
 		provideCompletionItems(_document: vscode.TextDocument, _position: vscode.Position, _token: vscode.CancellationToken, _context: vscode.CompletionContext) {
 
@@ -109,7 +106,6 @@ export async function activate(context: vscode.ExtensionContext) {
 		}
 	});
 
-	/* istanbul ignore next: laziness */
 	const commandLaunch = vscode.commands.registerCommand(constants.command.LAUNCH, () => {
 		if (configuration.get<boolean>(constants.configuration.launchCloseExisting.KEY)) {
 			closeExistingFirefoxExecutables();
@@ -118,10 +114,8 @@ export async function activate(context: vscode.ExtensionContext) {
 		openFirefoxExecutable();
 	});
 
-	/* istanbul ignore next: laziness */
 	context.subscriptions.push(commandLaunch, completionItemProviderUserChrome, onChangeConfigurationSource);
 
-	/* istanbul ignore next: laziness */
 	vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
 		if (configuration.get<boolean>(constants.configuration.launchOnSave.KEY)) {
 			if (document.fileName.endsWith(constants.firefox.file.USERCHROME_CSS)) {
