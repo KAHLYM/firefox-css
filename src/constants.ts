@@ -46,5 +46,13 @@ module.exports = Object.freeze({
             EXECUTABLE: "firefox.exe",
             USERCHROME: "userChrome.css"
         }
+    },
+    strings: {
+        message: {
+            getCompletions: {
+                USE_CACHE: "Use cache",
+                TRY_AGAIN: "Try again"
+            }
+        }
     }
 });
