@@ -11,9 +11,9 @@ export async function getCompletions(source: string): Promise<any> {
         await vscode.window.showWarningMessage("Failed to download completions.",
             constants.strings.message.getCompletions.TRY_AGAIN, constants.strings.message.getCompletions.USE_CACHE)
             .then(async value => {
-                if (value == constants.strings.message.getCompletions.TRY_AGAIN) {
+                if (value === constants.strings.message.getCompletions.TRY_AGAIN) {
                     completions = await getCompletions(source);
-                } else if (value == constants.strings.message.getCompletions.USE_CACHE) {
+                } else if (value === constants.strings.message.getCompletions.USE_CACHE) {
                     completions = await getCache(source);
                 }
             });
