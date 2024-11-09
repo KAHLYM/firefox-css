@@ -25,7 +25,7 @@ async function download(source: string): Promise<any> {
     try {
         const response = await fetch(url);
         const text = await response.text();
-        const json = JSON.parse(JSON.stringify(text));
+        const json = JSON.parse(text);
 
         output.appendLine(`Downloaded completions (${text.length} bytes) from: ${url}`);
         return json;
