@@ -9,6 +9,20 @@
   "categories": [
     "Other"
   ],
+  "homepage": "https://github.com/KAHLYM/firefox-css/blob/main/README.md",
+  "icon": "resources/icons/icon.png",
+  "keywords": [
+    "firefox",
+    "css"
+  ],
+  "license": "SEE LICENSE IN LICENSE",
+  "pricing": "Free",
+  "publisher": "KAHLYM",
+  "qna": false,
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/KAHLYM/firefox-css.git"
+  },
   "activationEvents": [
     "onLanguage:css"
   ],
