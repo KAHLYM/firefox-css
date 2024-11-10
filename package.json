@@ -1,7 +1,7 @@
 {
   "name": "firefox-css",
-  "displayName": "firefox-css",
-  "description": "",
+  "displayName": "Firefox CSS",
+  "description": "Completions for Firefox userChrome.css",
   "version": "0.1.0",
   "engines": {
     "vscode": "^1.94.0"
