@@ -3,6 +3,7 @@ import fs from "fs";
 import { spawn_, spawnSync_ } from './childProcess';
 import { getCompletions } from './completions';
 var constants = require('./constants');
+var path = require('path');
 import configuration = require('./configuration');
 
 export const output = vscode.window.createOutputChannel(constants.extension.NAME);
@@ -114,7 +115,57 @@ export async function activate(context: vscode.ExtensionContext) {
 		openFirefoxExecutable();
 	});
 
-	context.subscriptions.push(commandLaunch, completionItemProviderUserChrome, onChangeConfigurationSource);
+	class OpenItem implements vscode.QuickPickItem {
+		label: string;
+		description: string;
+
+		constructor(public label_: string, public description_: string) {
+			this.label = label_;
+			this.description = description_;
+		}
+	}
+
+	class ProfileDirectory {
+		name: string;
+		modified: Date;
+
+		constructor(public name_: string, public modified_: Date) {
+			this.name = name_;
+			this.modified = modified_;
+		}
+	}
+
+	function getProfileDirectories(): ProfileDirectory[] {
+		const PROFILES = "C:\\Users\\wrigh\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles";
+		let directories: ProfileDirectory[] = [];
+		let filenames = fs.readdirSync(PROFILES);
+		filenames.forEach(file => {
+			const stats = fs.statSync(`${PROFILES}\\${file}`);
+			directories.push(new ProfileDirectory(file, stats.mtime));
+		});
+		return directories;
+	}
+
+	const commandOpen = vscode.commands.registerCommand(constants.command.OPEN, () => {
+		const directories: ProfileDirectory[] = getProfileDirectories();
+
+		const options = [];
+		for (const directory of directories) {
+			const days = Math.ceil(Math.abs(new Date().getTime() - directory.modified.getTime()) / (1000 * 3600 * 24));
+			options.push(new OpenItem(directory.name, `Modified ${days} day${1 < days ? "s" : ""} ago`));
+		};
+
+		vscode.window.showQuickPick(options, {
+			placeHolder: "Select Firefox profile"
+		}).then(pick => {
+			const filepath = vscode.Uri.file(path.join("C:\\Users\\wrigh\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles", pick?.label, "chrome", "userChrome.css"));
+			vscode.workspace.openTextDocument(filepath).then(document => {
+				vscode.window.showTextDocument(document);
+			});
+		});
+	});
+
+	context.subscriptions.push(commandOpen, commandLaunch, completionItemProviderUserChrome, onChangeConfigurationSource);
 
 	vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
 		if (configuration.get<boolean>(constants.configuration.launchOnSave.KEY)) {

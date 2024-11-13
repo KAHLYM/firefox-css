@@ -1,6 +1,7 @@
 module.exports = Object.freeze({
     command: {
         LAUNCH: "firefox-css.launch",
+        OPEN: "firefox-css.open",
     },
     configuration: {
         SECTION: "firefoxCSS",
