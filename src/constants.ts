@@ -53,6 +53,10 @@ module.exports = Object.freeze({
             getCompletions: {
                 USE_CACHE: "Use cache",
                 TRY_AGAIN: "Try again"
+            },
+            open: {
+                CREATE: "Create",
+                DISMISS: "Dismiss"
             }
         }
     }
