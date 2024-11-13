@@ -46,6 +46,20 @@ export function getFirefoxExectuableLocation(): string | null {
 	}
 }
 
+export function getFirefoxAppDataDirectory(): string | null {
+	switch (process.platform) {
+		case constants.platform.DARWIN:
+		case constants.platform.FREEBSD:
+		case constants.platform.LINUX:
+		case constants.platform.SUNOS:
+			return null;
+		case constants.platform.WIN32:
+			return `${process.env.APPDATA}\\Mozilla\\Firefox`;
+		default:
+			return null;
+	}
+}
+
 /* istanbul ignore next: platform-dependant */
 export function closeExistingFirefoxExecutables(): void {
 	switch (process.platform) {
@@ -136,11 +150,11 @@ export async function activate(context: vscode.ExtensionContext) {
 	}
 
 	function getProfileDirectories(): ProfileDirectory[] {
-		const PROFILES = "C:\\Users\\wrigh\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles";
+		const profiles = path.join(getFirefoxAppDataDirectory(), "Profiles");
 		let directories: ProfileDirectory[] = [];
-		let filenames = fs.readdirSync(PROFILES);
+		let filenames = fs.readdirSync(profiles);
 		filenames.forEach(file => {
-			const stats = fs.statSync(`${PROFILES}\\${file}`);
+			const stats = fs.statSync(`${profiles}\\${file}`);
 			directories.push(new ProfileDirectory(file, stats.mtime));
 		});
 		return directories;
@@ -158,7 +172,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.window.showQuickPick(options, {
 			placeHolder: "Select Firefox profile"
 		}).then(pick => {
-			const filepath = vscode.Uri.file(path.join("C:\\Users\\wrigh\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles", pick?.label, "chrome", "userChrome.css"));
+		const filepath = vscode.Uri.file(path.join(getFirefoxAppDataDirectory(), "Profiles", pick?.label, "chrome", "userChrome.css"));
 			vscode.workspace.openTextDocument(filepath).then(document => {
 				vscode.window.showTextDocument(document);
 			});

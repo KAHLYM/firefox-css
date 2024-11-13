@@ -32,6 +32,10 @@
       {
         "command": "firefox-css.launch",
         "title": "Launch Firefox"
+      },
+      {
+        "command": "firefox-css.open",
+        "title": "Open userChrome.css"
       }
     ],
     "configuration": {
