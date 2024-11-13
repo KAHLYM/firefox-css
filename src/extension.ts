@@ -1,10 +1,10 @@
+import * as fs from "fs";
+import * as path from 'path';
 import * as vscode from 'vscode';
-import fs from "fs";
 import { spawn_, spawnSync_ } from './childProcess';
 import { getCompletions } from './completions';
-var constants = require('./constants');
-var path = require('path');
 import configuration = require('./configuration');
+let constants = require('./constants');
 
 export const output = vscode.window.createOutputChannel(constants.extension.NAME);
 
@@ -27,9 +27,9 @@ export function isPlatformAllowedByConfiguration(platform: string, targetPlatfor
 /* istanbul ignore next: platform-dependant */
 export function getFirefoxExectuableLocation(): string | null {
 	// Return user configuration if provided
-	const path = configuration.get<string>(constants.configuration.launchPath.KEY);
-	if (path && fs.existsSync(path)) {
-		return path;
+	const filepath = configuration.get<string>(constants.configuration.launchPath.KEY);
+	if (filepath && fs.existsSync(filepath)) {
+		return filepath;
 	}
 
 	// Otherwise, attempt to find Firefox exectuable 
@@ -40,7 +40,7 @@ export function getFirefoxExectuableLocation(): string | null {
 		case constants.platform.SUNOS:
 			return null;
 		case constants.platform.WIN32:
-			return `${process.env.PROGRAMFILES}\\Mozilla Firefox\\${constants.firefox.file.EXECUTABLE}`;
+			return path.join(process.env.PROGRAMFILES!, "Mozilla Firefox", constants.firefox.file.EXECUTABLE);
 		default:
 			return null;
 	}
@@ -54,7 +54,7 @@ export function getFirefoxAppDataDirectory(): string | null {
 		case constants.platform.SUNOS:
 			return null;
 		case constants.platform.WIN32:
-			return path.join(process.env.APPDATA, "Mozilla", "Firefox");
+			return path.join(process.env.APPDATA!, "Mozilla", "Firefox");
 		default:
 			return null;
 	}
@@ -151,7 +151,7 @@ export async function activate(context: vscode.ExtensionContext) {
 
 	function getProfileDirectories(): ProfileDirectory[] {
 		let directories: ProfileDirectory[] = [];
-		const profiles = path.join(getFirefoxAppDataDirectory(), "Profiles");
+		const profiles = path.join(getFirefoxAppDataDirectory()!, "Profiles");
 		fs.readdirSync(profiles).forEach(file => {
 			directories.push(new ProfileDirectory(file, fs.statSync(path.join(profiles, file)).mtime));
 		});
@@ -170,7 +170,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.window.showQuickPick(options, {
 			placeHolder: "Select Firefox profile"
 		}).then(pick => {
-			const filepath = vscode.Uri.file(path.join(getFirefoxAppDataDirectory(), "Profiles", pick?.label, "chrome", constants.firefox.file.USERCHROME)).fsPath;
+			const filepath = vscode.Uri.file(path.join(getFirefoxAppDataDirectory()!, "Profiles", pick!.label, "chrome", constants.firefox.file.USERCHROME)).fsPath;
 
 			if (!fs.existsSync(filepath)) {
 				vscode.window.showWarningMessage("userChrome.css does not exists.",
