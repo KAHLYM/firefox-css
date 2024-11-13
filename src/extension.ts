@@ -1,9 +1,10 @@
+import * as fs from "fs";
+import * as path from 'path';
 import * as vscode from 'vscode';
-import fs from "fs";
 import { spawn_, spawnSync_ } from './childProcess';
 import { getCompletions } from './completions';
-var constants = require('./constants');
 import configuration = require('./configuration');
+let constants = require('./constants');
 
 export const output = vscode.window.createOutputChannel(constants.extension.NAME);
 
@@ -26,9 +27,9 @@ export function isPlatformAllowedByConfiguration(platform: string, targetPlatfor
 /* istanbul ignore next: platform-dependant */
 export function getFirefoxExectuableLocation(): string | null {
 	// Return user configuration if provided
-	const path = configuration.get<string>(constants.configuration.launchPath.KEY);
-	if (path && fs.existsSync(path)) {
-		return path;
+	const filepath = configuration.get<string>(constants.configuration.launchPath.KEY);
+	if (filepath && fs.existsSync(filepath)) {
+		return filepath;
 	}
 
 	// Otherwise, attempt to find Firefox exectuable 
@@ -39,7 +40,21 @@ export function getFirefoxExectuableLocation(): string | null {
 		case constants.platform.SUNOS:
 			return null;
 		case constants.platform.WIN32:
-			return `${process.env.PROGRAMFILES}\\Mozilla Firefox\\${constants.firefox.file.EXECUTABLE}`;
+			return path.join(process.env.PROGRAMFILES!, "Mozilla Firefox", constants.firefox.file.EXECUTABLE);
+		default:
+			return null;
+	}
+}
+
+export function getFirefoxAppDataDirectory(): string | null {
+	switch (process.platform) {
+		case constants.platform.DARWIN:
+		case constants.platform.FREEBSD:
+		case constants.platform.LINUX:
+		case constants.platform.SUNOS:
+			return null;
+		case constants.platform.WIN32:
+			return path.join(process.env.APPDATA!, "Mozilla", "Firefox");
 		default:
 			return null;
 	}
@@ -114,7 +129,82 @@ export async function activate(context: vscode.ExtensionContext) {
 		openFirefoxExecutable();
 	});
 
-	context.subscriptions.push(commandLaunch, completionItemProviderUserChrome, onChangeConfigurationSource);
+	class OpenItem implements vscode.QuickPickItem {
+		label: string;
+		description: string;
+
+		constructor(public label_: string, public description_: string) {
+			this.label = label_;
+			this.description = description_;
+		}
+	}
+
+	class ProfileDirectory {
+		name: string;
+		modified: Date;
+
+		constructor(public name_: string, public modified_: Date) {
+			this.name = name_;
+			this.modified = modified_;
+		}
+	}
+
+	function getProfileDirectories(): ProfileDirectory[] {
+		let directories: ProfileDirectory[] = [];
+		const profiles = path.join(getFirefoxAppDataDirectory()!, "Profiles");
+		fs.readdirSync(profiles).forEach(file => {
+			directories.push(new ProfileDirectory(file, fs.statSync(path.join(profiles, file)).mtime));
+		});
+		return directories;
+	}
+
+	const commandOpen = vscode.commands.registerCommand(constants.command.OPEN, () => {
+		const directories: ProfileDirectory[] = getProfileDirectories();
+
+		let options: OpenItem[] = [];
+		for (const directory of directories) {
+			const days = Math.ceil(Math.abs(new Date().getTime() - directory.modified.getTime()) / (1000 * 3600 * 24));
+			options.push(new OpenItem(directory.name, `Modified ${days} day${1 < days ? "s" : ""} ago`));
+		};
+
+		vscode.window.showQuickPick(options, {
+			placeHolder: "Select Firefox profile"
+		}).then(pick => {
+			const filepath = vscode.Uri.file(path.join(getFirefoxAppDataDirectory()!, "Profiles", pick!.label, "chrome", constants.firefox.file.USERCHROME)).fsPath;
+
+			if (!fs.existsSync(filepath)) {
+				vscode.window.showWarningMessage("userChrome.css does not exists.",
+					constants.strings.message.open.CREATE, constants.strings.message.open.DISMISS)
+					.then(async value => {
+						if (value === constants.strings.message.open.CREATE) {
+							fs.mkdir(path.dirname(filepath), { recursive: true }, (err) => {
+								if (err) {
+									output.appendLine(`Failed to create directories: ${err}`);
+								} else {
+									fs.writeFile(filepath, "", (err) => {
+										if (err) {
+											output.appendLine(`Failed to write file: ${err}`);
+										} else {
+											vscode.workspace.openTextDocument(filepath).then(document => {
+												vscode.window.showTextDocument(document);
+											});
+										};
+									});
+								};
+							});
+						} else if (value === constants.strings.message.open.DISMISS) {
+							return;
+						}
+					});
+			} else {
+				vscode.workspace.openTextDocument(filepath).then(document => {
+					vscode.window.showTextDocument(document);
+				});
+			}
+		});
+	});
+
+	context.subscriptions.push(commandOpen, commandLaunch, completionItemProviderUserChrome, onChangeConfigurationSource);
 
 	vscode.workspace.onDidSaveTextDocument((document: vscode.TextDocument) => {
 		if (configuration.get<boolean>(constants.configuration.launchOnSave.KEY)) {
