@@ -150,12 +150,10 @@ export async function activate(context: vscode.ExtensionContext) {
 	}
 
 	function getProfileDirectories(): ProfileDirectory[] {
-		const profiles = path.join(getFirefoxAppDataDirectory(), "Profiles");
 		let directories: ProfileDirectory[] = [];
-		let filenames = fs.readdirSync(profiles);
-		filenames.forEach(file => {
-			const stats = fs.statSync(`${profiles}\\${file}`);
-			directories.push(new ProfileDirectory(file, stats.mtime));
+		const profiles = path.join(getFirefoxAppDataDirectory(), "Profiles");
+		fs.readdirSync(profiles).forEach(file => {
+			directories.push(new ProfileDirectory(file, fs.statSync(path.join(profiles, file)).mtime));
 		});
 		return directories;
 	}
@@ -163,7 +161,7 @@ export async function activate(context: vscode.ExtensionContext) {
 	const commandOpen = vscode.commands.registerCommand(constants.command.OPEN, () => {
 		const directories: ProfileDirectory[] = getProfileDirectories();
 
-		const options = [];
+		let options: OpenItem[] = [];
 		for (const directory of directories) {
 			const days = Math.ceil(Math.abs(new Date().getTime() - directory.modified.getTime()) / (1000 * 3600 * 24));
 			options.push(new OpenItem(directory.name, `Modified ${days} day${1 < days ? "s" : ""} ago`));
@@ -172,23 +170,22 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.window.showQuickPick(options, {
 			placeHolder: "Select Firefox profile"
 		}).then(pick => {
-			const filepath = vscode.Uri.file(path.join(getFirefoxAppDataDirectory(), "Profiles", pick?.label, "chrome", constants.firefox.file.USERCHROME));
+			const filepath = vscode.Uri.file(path.join(getFirefoxAppDataDirectory(), "Profiles", pick?.label, "chrome", constants.firefox.file.USERCHROME)).fsPath;
 
-			if (!fs.existsSync(filepath.fsPath)) {
-				output.appendLine(`File does not exist: ${filepath.fsPath}`);
+			if (!fs.existsSync(filepath)) {
 				vscode.window.showWarningMessage("userChrome.css does not exists.",
 					constants.strings.message.open.CREATE, constants.strings.message.open.DISMISS)
 					.then(async value => {
 						if (value === constants.strings.message.open.CREATE) {
-							fs.mkdir(path.dirname(filepath.fsPath), { recursive: true }, (err) => {
+							fs.mkdir(path.dirname(filepath), { recursive: true }, (err) => {
 								if (err) {
 									output.appendLine(`Failed to create directories: ${err}`);
 								} else {
-									fs.writeFile(filepath.fsPath, "", (err) => {
+									fs.writeFile(filepath, "", (err) => {
 										if (err) {
 											output.appendLine(`Failed to write file: ${err}`);
 										} else {
-											vscode.workspace.openTextDocument(filepath.fsPath).then(document => {
+											vscode.workspace.openTextDocument(filepath).then(document => {
 												vscode.window.showTextDocument(document);
 											});
 										};
