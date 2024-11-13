@@ -172,7 +172,7 @@ export async function activate(context: vscode.ExtensionContext) {
 		vscode.window.showQuickPick(options, {
 			placeHolder: "Select Firefox profile"
 		}).then(pick => {
-			const filepath = vscode.Uri.file(path.join(getFirefoxAppDataDirectory(), "Profiles", pick?.label, "chrome", "userChrome.css"));
+			const filepath = vscode.Uri.file(path.join(getFirefoxAppDataDirectory(), "Profiles", pick?.label, "chrome", constants.firefox.file.USERCHROME));
 
 			if (!fs.existsSync(filepath.fsPath)) {
 				output.appendLine(`File does not exist: ${filepath.fsPath}`);
@@ -180,12 +180,20 @@ export async function activate(context: vscode.ExtensionContext) {
 					constants.strings.message.open.CREATE, constants.strings.message.open.DISMISS)
 					.then(async value => {
 						if (value === constants.strings.message.open.CREATE) {
-							fs.mkdir(path.dirname(filepath.fsPath), { recursive: true }, _ => {
-								fs.writeFile(filepath.fsPath, "", _ => {
-									vscode.workspace.openTextDocument(filepath.fsPath).then(document => {
-										vscode.window.showTextDocument(document);
+							fs.mkdir(path.dirname(filepath.fsPath), { recursive: true }, (err) => {
+								if (err) {
+									output.appendLine(`Failed to create directories: ${err}`);
+								} else {
+									fs.writeFile(filepath.fsPath, "", (err) => {
+										if (err) {
+											output.appendLine(`Failed to write file: ${err}`);
+										} else {
+											vscode.workspace.openTextDocument(filepath.fsPath).then(document => {
+												vscode.window.showTextDocument(document);
+											});
+										};
 									});
-								});
+								};
 							});
 						} else if (value === constants.strings.message.open.DISMISS) {
 							return;
