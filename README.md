@@ -1,11 +1,26 @@
-This extension provides an environment to develop Firefox `userChrome.css`.
+<h1 align="center">
+  <br>
+    <img src="https://github.com/KAHLYM/firefox-css/blob/main/resources/icons/icon.png?raw=true" alt="logo" width="200">
+  <br>
+  An environment to develop Firefox CSS
+  <br>
+  <br>
+</h1>
 
-## Features
+<h4 align="center">Develop your CSS for Firefox from VS Code.</h4>
 
-### Snippets
+A Visual Studio Code extension to provide an environment to develop Firefox `userChrome.css`.
 
-CSS snippets are sourced from [gecko-dev](https://github.com/mozilla/gecko-dev) and are updated daily at 00:00 UTC. The source branch can be configured to use beta, master or release.
+###  Features
 
-### Launch of Firefox on save
+#### Snippets
 
-Firefox can be launched on save of `userChrome.css` and existing Firefox processes can be closed.
+CSS snippets are sourced from Mozilla’s [gecko-dev repository](https://github.com/mozilla/gecko-dev), updated daily at 00:00 UTC. Users can select a source branch (beta, master, or release) based on their preference.
+
+#### Launch of Firefox on save
+
+Automatically launch Firefox whenever `userChrome.css` is saved. If Firefox is already open, the existing process can be closed to apply changes before relaunching.
+
+#### Manage userChrome.css 
+
+Easily open and existing `userChrome.css` or create if the file does not exist for your chosen Firefox profile. The appropriate profile is likely the most recently modified profile.
